@@ -1,6 +1,6 @@
 # GraphHashtagsNets
 
-A tool for visualize networks depending on their weights
+A tool for visualize networks by frquency and weight
 
 Installing dependencies
   For linux users:
