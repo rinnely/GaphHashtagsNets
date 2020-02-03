@@ -9,13 +9,14 @@ for linux users:
     	1. Install python
     	
 	2. Download de latest release of chromedriver https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/
-    	3. Install twitter-scraper from https://github.com/bisguzar/twitter-scraper
+    	
+	3. Install twitter-scraper from https://github.com/bisguzar/twitter-scraper
 
     	run the following commands in a terminal
     	
-	4. Install Bokeh: pip install bokeh
+		4. Install Bokeh: pip install bokeh
     		
-	5 Install networks: pip install networkx
+		5 Install networks: pip install networkx
 
 Usage
 python JIDOKA.py --help
