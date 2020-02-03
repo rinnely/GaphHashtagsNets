@@ -1,33 +1,50 @@
-graph networks
+JIDOKA
 
 A tool for visualize networks depending on their weights
 
 Installing dependencies
   For linux users:
     1. Install python
+    2. Download de latest release of chromedriver https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/
+    3. Install twitter-scraper from https://github.com/bisguzar/twitter-scraper
 
     run the following commands in a terminal
-    2. Install Bokeh: pip install bokeh
+    	
+	4. Install Bokeh: pip install bokeh
 
-    3 Install networks: pip install networkx
+    	5 Install networks: pip install networkx
 
 Usage
-python graphNetworks-v3.py --help
-usage: graphNetworks-v3.py [-h] [--sets SETS] [--frq FRQ] [--mw MW]
+python JIDOKA.py --help
+usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
+                 [--lang LANG] [--sets SETS] [--nt NT] [--et ET]
 
-Graphs
+JIDOKA
 
 optional arguments:
-  -h, --help   show this help message and exit
-  --sets SETS  input sets of hastags
-  --frq FRQ    input min freq a hashtag appears
-  --mw MW      input min weight of the network
+  -h, --help     show this help message and exit
+  --topic TOPIC  topic name for the project.
+  --query QUERY  query to scrap tweets.
+  --limit LIMIT  set a limit number for scrap tweets.
+  --lang LANG    set language for the query
+  --sets SETS    input .txt with hashtags subsets
+  --nt NT        set min node threshold for the graph
+  --et ET        set min edge threshold for the graph
+
 
 Running
-run graph-networks and wirite the file that contains the subsets of hashtags file. frequency and weight parameters are optional
 
-python graphNetworks-v3.py --sets ./proyecto/sets_aborto_500.txt --frq 2
+run JIDOKA and wirite the topic name of the project, a query to scrape tweets. Topic, lang, nt, et are optional. The query can be a word like "aborto" or many hashtags like "#aborto OR #seraley OR #sialavida", always with quotes.
 
-python graphNetworks-v3.py --sets ./mohammad/set_Atheism_ns.txt --frq 2 --mw 2
+python JIDOKA.py --topic aborto --query "#aborto OR #seraley OR #sialavida" --lang es
 
-this will generate an interactive html file with the network result that can be open on any browser
+
+this will scrape tweets using the query and generate a graph of the hashtags used in tweets.
+
+if you already have the subsets of hashtags you cant explore them. 
+
+run JIDOKA and wirite the file that contains the subsets of hashtags. nt and et parameters are optional
+
+python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1
+
+this will generate the graph of the hashtags.
