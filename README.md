@@ -4,18 +4,18 @@ A tool for visualize networks depending on their weights
 
 Installing dependencies
 
-	for linux users:
+for linux users:
   
     	1. Install python
     	
-	2. Download de latest release of chromedriver <href a https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/>
+	2. Download de latest release of chromedriver https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/
     	3. Install twitter-scraper from https://github.com/bisguzar/twitter-scraper
 
     	run the following commands in a terminal
     	
-		4. Install Bokeh: pip install bokeh
-
-    		5 Install networks: pip install networkx
+	4. Install Bokeh: pip install bokeh
+    		
+	5 Install networks: pip install networkx
 
 Usage
 python JIDOKA.py --help
@@ -26,12 +26,19 @@ JIDOKA
 
 optional arguments:
   -h, --help     show this help message and exit
+  
   --topic TOPIC  topic name for the project.
+  
   --query QUERY  query to scrap tweets.
+  
   --limit LIMIT  set a limit number for scrap tweets.
+  
   --lang LANG    set language for the query
+  
   --sets SETS    input .txt with hashtags subsets
+  
   --nt NT        set min node threshold for the graph
+  
   --et ET        set min edge threshold for the graph
 
 
