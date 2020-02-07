@@ -138,6 +138,7 @@ def graphNetwork(adjm,data):
     data['degree'] = list(dict(G.degree).values())
     subgraphs = getSubgraphs(G)
     subgraphs = data.join(subgraphs.set_index('nodes'))
+    subgraphs['subsets'] = adjm.sum(axis=0)
 
     graph_plot = Plot(plot_width=800, plot_height=800,
                 x_range=Range1d(-1.1, 1.1), y_range=Range1d(-1.1, 1.1))
@@ -145,7 +146,8 @@ def graphNetwork(adjm,data):
     graph_plot.title.text = "Graph.\nTotal Nodes: %i\nTotal Edges: %i\t Total subgraphs:%i"%(G.number_of_nodes(),
     G.number_of_edges(), len(subgraphs.subgraph.unique()))
 
-    node_hover_tool = HoverTool(tooltips=[("hashtag", "@hashtag"),("freq", "@frequency"),('degree', '@degree'), ('subgraph', '@subgraph')])
+    node_hover_tool = HoverTool(tooltips=[("hashtag", "@hashtag"),("freq", "@frequency"),('degree', '@degree'),
+                                          ('subsets','@subsets'),('subgraph', '@subgraph'),('ix', '@ix')])
     graph_plot.add_tools(node_hover_tool, BoxZoomTool(), ResetTool(),WheelZoomTool())
     
     graph_renderer = from_networkx(G, nx.spring_layout, scale=1, center=(0, 0))
@@ -158,7 +160,8 @@ def graphNetwork(adjm,data):
     graph_renderer.node_renderer.data_source.data['frequency'] = subgraphs.frq.values
     graph_renderer.node_renderer.data_source.data['degree'] = subgraphs.degree.values
     graph_renderer.node_renderer.data_source.data['subgraph'] = subgraphs.subgraph.values
-
+    graph_renderer.node_renderer.data_source.data['ix'] = list(subgraphs.index)
+    graph_renderer.node_renderer.data_source.data['subsets'] = subgraphs.subsets.values
 
     graph_renderer.inspection_policy = NodesAndLinkedEdges()
     graph_renderer.selection_policy = NodesAndLinkedEdges()
