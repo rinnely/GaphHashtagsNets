@@ -1,5 +1,5 @@
 #graphnetworks ver 4.1
-# added removeIsle, getMatrixByFract, getNewSubsets
+# added removeIsle, getMatrixOverNElements, getNewSubsets
 #
 import argparse
 import networkx as nx
