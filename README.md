@@ -36,7 +36,7 @@ JIDOKA
     --sets SETS    input .txt with hashtags subsets
     --nt NT        set min node threshold for the graph
     --et ET        set min edge threshold for the graph
-    --byO BYO      get Matrix by 1 over n-1 elements in subsets
+    --byO BYO      if True get Matrix by 1 over n-1 elements in subsets
     --dnt DNT      set min threshoold for remove disconected nodes
 
 
