@@ -4,15 +4,16 @@
 import os
 import sys
 import re
-from twitterscraper import query_tweets;
 import pandas as pd
-import graphnetworks_v4 as gn
+import graphnetworks as gn
 import datetime
 import argparse
 
 global topic
 
 def scrapTweets(query, limit=None, lang='', output='tweets.csv', begin = datetime.date.today()-datetime.timedelta(days=60), end = datetime.date.today()):
+    from twitterscraper import query_tweets;
+
     data = []
     for tweet in query_tweets(query, limit=limit, lang=lang, begindate=begin, enddate=end):
         data.append([tweet.tweet_id,tweet.text])
@@ -66,6 +67,9 @@ if __name__ == "__main__":
     parser.add_argument('--sets', default=None, type=str, help='input .txt with hashtags subsets')
     parser.add_argument('--nt', default=0, type=int, help='set min node threshold for the graph')
     parser.add_argument('--et', default=0, type=int, help='set min edge threshold for the graph')
+    parser.add_argument('--byO', default=False, type=bool, help='if True get Matrix by 1 over n-1 elements in subsets')
+    parser.add_argument('--dnt', default=0, type=float, help='set min threshoold for remove disconected nodes ')
+    
     args = parser.parse_args()
     
     if args.topic:
@@ -89,13 +93,13 @@ if __name__ == "__main__":
 
         subsetfile = path+'/'+topic+'_subsets.txt'
 
-        subgraphs = gn.createByParameters(subsetfile, args.nt,  args.et)
+        subgraphs = gn.createByParameters(args.sets, args.nt,  args.et, args.byO, args.dnt)
 
         subgraphs.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
     
     elif args.sets:
         
-        subgraphs = gn.createByParameters(args.sets, args.nt,  args.et)
+        subgraphs = gn.createByParameters(args.sets, args.nt,  args.et, args.byO, args.dnt)
 
         subgraphs.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
 
