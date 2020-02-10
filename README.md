@@ -1,6 +1,6 @@
 JIDOKA
 
-A tool for visualize networks depending on their weights
+A tool for visualize networks
 
 Installing dependencies
 
@@ -8,7 +8,7 @@ for linux users:
   
     	1. Install python
     	
-	2. Download de latest release of chromedriver https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/
+	2. Download the latest release of chromedriver https://chromedriver.storage.googleapis.com/index.html?path=79.0.3945.36/
     	
 	3. Install twitter-scraper from https://github.com/bisguzar/twitter-scraper
 
@@ -34,8 +34,8 @@ JIDOKA
     --limit LIMIT  set a limit number for scrap tweets.
     --lang LANG    set language for the query
     --sets SETS    input .txt with hashtags subsets
-    --nt NT        set min node threshold for the graph
-    --et ET        set min edge threshold for the graph
+    --nt NT        set min node threshold for graph
+    --et ET        set min edge threshold for graph
     --byO BYO      if True get Matrix by 1 over n-1 elements in subsets
     --dnt DNT      set min threshoold for remove disconected nodes
 
@@ -58,4 +58,4 @@ run JIDOKA and wirite the file that contains the subsets of hashtags. nt, et, by
     python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1 --byO True --dnt 1.1
 
 
-this will generate the graph of the hashtags.
+this will generate the graph of hashtags.
