@@ -65,10 +65,10 @@ if __name__ == "__main__":
     #explorar
     
     parser.add_argument('--sets', default=None, type=str, help='input .txt with hashtags subsets')
-    parser.add_argument('--nt', default=0, type=int, help='set min node threshold for the graph')
-    parser.add_argument('--et', default=0, type=int, help='set min edge threshold for the graph')
-    parser.add_argument('--byO', default=False, type=bool, help='if True get Matrix by 1 over n-1 elements in subsets')
-    parser.add_argument('--dnt', default=0, type=float, help='set min threshoold for remove disconected nodes ')
+    parser.add_argument('--byn', default=1, type=int, help='if 0 get Matrix by 1 over n-1 elements in subsets')
+    parser.add_argument('--nt', default=1, type=int, help='set min node threshold for the graph')
+    parser.add_argument('--et', default=None, type=int, help='set min edge threshold for the graph')
+    parser.add_argument('--st', default=None, type=float, help='set min strenght threshoold between nodes')
     
     args = parser.parse_args()
     
@@ -79,6 +79,8 @@ if __name__ == "__main__":
     
     path = os.getcwd()+'/'+topic
     makeDirectory(path)
+    
+    gn.byn = args.byn
 
     if args.query:
         filename = path+'/'+topic+'.csv'
@@ -93,14 +95,13 @@ if __name__ == "__main__":
 
         subsetfile = path+'/'+topic+'_subsets.txt'
 
-        subgraphs = gn.createByParameters(args.sets, args.nt,  args.et, args.byO, args.dnt)
-
-        subgraphs.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
+        gn.createByParameters(args.sets, args.nt,  args.et, args.st)
+        
+        gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
     
     elif args.sets:
         
-        subgraphs = gn.createByParameters(args.sets, args.nt,  args.et, args.byO, args.dnt)
-
-        subgraphs.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
-
+        gn.createByParameters(args.sets, args.nt,  args.et, args.st)
+        
+        gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
         
