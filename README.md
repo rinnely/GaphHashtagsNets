@@ -14,16 +14,17 @@ for linux users:
 
     	run the following commands in a terminal
     	
-		4. Install Bokeh: pip install bokeh
+	4. Install Bokeh: pip install bokeh
     		
-		5 Install networks: pip install networkx
+	5 Install networks: pip install networkx
 
 Usage
 
     python JIDOKA.py --help
     usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
-                 [--lang LANG] [--sets SETS] [--nt NT] [--et ET]
-
+                 [--lang LANG] [--sets SETS] [--byn BYN] [--nt NT] [--et ET]
+                 [--st ST]
+		 
 JIDOKA
    
    optional arguments:
@@ -34,12 +35,10 @@ JIDOKA
     --limit LIMIT  set a limit number for scrap tweets.
     --lang LANG    set language for the query
     --sets SETS    input .txt with hashtags subsets
-    --nt NT        set min node threshold for graph
-    --et ET        set min edge threshold for graph
-    --byO BYO      if True get Matrix by 1 over n-1 elements in subsets
-    --dnt DNT      set min threshoold for remove disconected nodes
-
-
+    --byn BYN      if 0 get Matrix by 1 over n-1 elements in subsets
+    --nt NT        set min node threshold for the graph
+    --et ET        set min edge threshold for the graph
+    --st ST        set min strenght threshoold between nodes
 
 Running
 
@@ -55,7 +54,7 @@ run JIDOKA and wirite the file that contains the subsets of hashtags. nt, et, by
  
     python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1
     
-    python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1 --byO True --dnt 1.1
+    python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1 --byn 0 --st 1.1
 
 
 this will generate the graph of hashtags.
