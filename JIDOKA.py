@@ -63,15 +63,14 @@ if __name__ == "__main__":
     parser.add_argument('--lang', default='', type=str, help='set language for the query')
         
     #explorar
-    
+
     parser.add_argument('--sets', default=None, type=str, help='input .txt with hashtags subsets')
-    parser.add_argument('--byn', default=1, type=int, help='if 0 get Matrix by 1 over n-1 elements in subsets')
-    parser.add_argument('--nt', default=1, type=int, help='set min node threshold for the graph')
-    parser.add_argument('--et', default=None, type=int, help='set min edge threshold for the graph')
-    parser.add_argument('--st', default=None, type=float, help='set min strenght threshoold between nodes')
+    parser.add_argument('--nt', default=1, type=int, help='set min node threshold for of graph')
+    parser.add_argument('--et', default=None, type=int, help='set min edge threshold of graph')
+    parser.add_argument('--i', default=1, type=float, help='remove isolate nodes')
     
     args = parser.parse_args()
-    
+           
     if args.topic:
         topic = args.topic
     else:
@@ -80,8 +79,6 @@ if __name__ == "__main__":
     path = os.getcwd()+'/'+topic
     makeDirectory(path)
     
-    gn.byn = args.byn
-
     if args.query:
         filename = path+'/'+topic+'.csv'
         
@@ -94,14 +91,13 @@ if __name__ == "__main__":
         saveConjuntos(path+'/',topic+'_subsets.txt', hts)
 
         subsetfile = path+'/'+topic+'_subsets.txt'
-
-        gn.createByParameters(args.sets, args.nt,  args.et, args.st)
         
+        gn.createByParameters(args.sets, args.nt,  args.et, args.i)
+
         gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
+
     
     elif args.sets:
-        
-        gn.createByParameters(args.sets, args.nt,  args.et, args.st)
-        
+        gn.createByParameters(args.sets, args.nt,  args.et, args.i)
+
         gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
-        
