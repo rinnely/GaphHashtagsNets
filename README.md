@@ -18,27 +18,23 @@ for linux users:
     
     5 Install networks: pip install networkx
 
-Usage
+Usage:
 
-    python JIDOKA.py --help
-    usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
-                 [--lang LANG] [--sets SETS] [--byn BYN] [--nt NT] [--et ET]
-                 [--st ST]
-		 
+    JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
+              [--lang LANG] [--sets SETS] [--nt NT] [--et ET] [--i I]
+
 JIDOKA
-   
-   optional arguments:
-  
+
+    optional arguments:
     -h, --help     show this help message and exit
     --topic TOPIC  topic name for the project.
     --query QUERY  query to scrap tweets.
     --limit LIMIT  set a limit number for scrap tweets.
     --lang LANG    set language for the query
     --sets SETS    input .txt with hashtags subsets
-    --byn BYN      if 0 get Matrix by 1 over n-1 elements in subsets
-    --nt NT        set min node threshold for the graph
-    --et ET        set min edge threshold for the graph
-    --st ST        set min strenght threshoold between nodes
+    --nt NT        set min node threshold for of graph
+    --et ET        set min edge threshold of graph
+    --i I          remove isolate nodes
 
 Running
 
@@ -54,7 +50,6 @@ run JIDOKA and wirite the file that contains the subsets of hashtags. nt, et, by
  
     python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1
     
-    python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1 --byn 0 --st 1.1
-
+    python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1 --i 0 
 
 this will generate the graph of hashtags.
