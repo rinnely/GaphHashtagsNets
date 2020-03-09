@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 # coding: utf-8
-# version 6
+# version 6.1
 #
 
 # update getMatrix(), graphNetwork(), createByParameters
@@ -9,13 +9,22 @@
 
 import argparse
 import networkx as nx
-from bokeh.io import show, output_file
+from bokeh.io import show, output_file, curdoc
 from bokeh.models import Plot, Range1d, MultiLine, Circle, HoverTool, TapTool, BoxSelectTool, BoxZoomTool, ResetTool, WheelZoomTool
 from bokeh.models.graphs import from_networkx, NodesAndLinkedEdges, EdgesAndLinkedNodes
+from bokeh.themes import built_in_themes
+import bokeh.palettes as bp
 import numpy as np
 import matplotlib.pyplot as plt
 import os
 import pandas as pd
+import unicodedata
+import random
+
+def removeAccents(input_str):
+    nfkd_form = unicodedata.normalize('NFKD', input_str)
+    only_ascii = nfkd_form.encode('ASCII', 'ignore')
+    return only_ascii.decode().lower()
 
 def readConjuntos(filename):
     global conjuntos
@@ -99,32 +108,83 @@ def getSubgraphs(G):
 
 def updateMatrix():
     global matriz, G
-    matriz = nx.adjacency_matrix(G)
-    matriz = matriz.todense()
+    matriz = nx.adjacency_matrix(G).todense()
+    return
+
+def getComunity():
+    global G, network_data
     
+    colors = bp.Category20[20]
+    random.shuffle(colors)
+    
+    #clusters = list(nx.algorithms.community.kernighan_lin_bisection(G))
+    #clusters = list(nx.algorithms.community.asyn_fluidc(G,2,seed=3))
+    girvan_newman = list(nx.algorithms.community.girvan_newman(G))
+    for level in girvan_newman:
+        if len(level) == 2:
+            clusters = level
+            break
+        else:
+            clusters = girvan_newman[0]
+            
+    partition = {}
+    for i in range(len(clusters)):
+        for c in clusters[i]:
+            partition[c] = i
+            
+    partition_data=pd.DataFrame(partition.items(), columns=['node','community'])
+    partition_data['color']=''
+    for i, row in partition_data.iterrows():
+        partition_data.loc[i,'color'] = colors[partition[int(row.node)]]
+        
+    network_data = network_data.join(partition_data.set_index('node'))
+    
+    if list(nx.articulation_points(G)):
+        for ap in list(nx.articulation_points(G)):
+            network_data.loc[ap,'color']='#ffffff'
+            network_data.loc[ap,'community']=-1
+            
+    
+    return
+
+def removeBridges():
+    global G, matriz
+    bridges = list(nx.algorithms.bridges(G))
+    G.remove_edges_from(bridges)
+    updateMatrix()
+    return
+
+def removeNoiseInGraph():
+    removeBridges()
+    removeIsolates()
+    updateMatrix()
     return
 
 def graphNetwork():
     global network_data, matriz, G
-    
+    removeNoiseInGraph()
+    getComunity()
     network_data['degree'] = list(dict(G.degree).values())
     network_data = network_data.join(getSubgraphs(G).set_index('nodes'))
     network_data['strength'] = list(np.array(matriz.sum(axis=0))[0])
-    graph_plot = Plot(plot_width=800, plot_height=800,
+    
+    curdoc().theme = 'dark_minimal'
+    graph_plot = Plot(plot_width=1600, plot_height=900,
                 x_range=Range1d(-1.1, 1.1), y_range=Range1d(-1.1, 1.1))
     
-    graph_plot.title.text = "Graph.\nTotal Nodes: %i\nTotal Edges: %i\t Total subgraphs:%i"%(G.number_of_nodes(),
-    G.number_of_edges(), len(network_data.subgraph.unique()))
+    graph_plot.title.text = "Graph.\nTotal Nodes: %i\nTotal Edges: %i"%(G.number_of_nodes(), G.number_of_edges())
 
     node_hover_tool = HoverTool(tooltips=[("hashtag", "@hashtag"),("freq", "@frequency"),('degree', '@degree'),
-                                          ('strength','@strength'),('subgraph', '@subgraph'),('ix', '@ix')])
+                                          ('strength','@strength'),('subgraph', '@subgraph'),('community', '@community'),
+                                          ('ix', '@ix')])
+    
     graph_plot.add_tools(node_hover_tool, BoxZoomTool(), ResetTool(),WheelZoomTool())
     
     graph_renderer = from_networkx(G, nx.spring_layout, scale=1, center=(0, 0))
-    graph_renderer.node_renderer.glyph = Circle(size=18, fill_color='#277bb6')
+    graph_renderer.node_renderer.glyph = Circle(size='size', fill_color='colors')
     graph_renderer.node_renderer.hover_glyph = Circle(size=18, fill_color='#E84A5F')
     graph_renderer.node_renderer.glyph.properties_with_values()
-    graph_renderer.edge_renderer.glyph = MultiLine(line_color="gray", line_alpha=0.7, line_width=0.3)
+    graph_renderer.edge_renderer.glyph = MultiLine(line_color="#f2f2f2", line_alpha=0.8, line_width=0.4)
     graph_renderer.edge_renderer.hover_glyph = MultiLine(line_color='#e09e8f', line_width=3)
     graph_renderer.node_renderer.data_source.data['hashtag'] = network_data.ht.values
     graph_renderer.node_renderer.data_source.data['frequency'] = network_data.frq.values
@@ -132,19 +192,33 @@ def graphNetwork():
     graph_renderer.node_renderer.data_source.data['subgraph'] = network_data.subgraph.values
     graph_renderer.node_renderer.data_source.data['ix'] = list(network_data.index)
     graph_renderer.node_renderer.data_source.data['strength'] = network_data.strength.values
+    graph_renderer.node_renderer.data_source.data['size'] = np.log((network_data.degree.values+1)*3)*6
+    
+    if 'color' in network_data.keys():
+            graph_renderer.node_renderer.data_source.data['colors'] = network_data.color.values
+    else:
+         graph_renderer.node_renderer.data_source.data['colors'] = ['red']*G.number_of_nodes()
+    if 'community' in network_data.keys():
+        graph_renderer.node_renderer.data_source.data['community'] = network_data.community.values
+    else:
+        graph_renderer.node_renderer.data_source.data['community'] = ['NONE']*G.number_of_nodes()
+
 
     graph_renderer.inspection_policy = NodesAndLinkedEdges()
     graph_renderer.selection_policy = NodesAndLinkedEdges()
     graph_plot.toolbar.active_inspect = [node_hover_tool]
     graph_plot.renderers.append(graph_renderer)
-
-    #output_file(path+topic+"_graph_N"+str(nodeThresh)+'E'+str(edgeThresh)+".html")
+    
+    graph_plot.background_fill_color = '#0d0d0d'
+    graph_plot.background = 'black'
+    graph_plot.border_fill_color = '#1a1a1a'
+    output_file("graph.html")
 
     show(graph_plot)
     return
 
 def createByParameters(filename, nodeThreshold=1, edgeThreshold=None, isolates=1):
-    global network_data, conjuntos, matriz, G
+    global network_data, conjuntos, matriz, G, community_data
     
     readConjuntos(filename)
     
@@ -166,10 +240,13 @@ def createByParameters(filename, nodeThreshold=1, edgeThreshold=None, isolates=1
         
     graphNetwork()
 
+    community_data = network_data[['ht','community']]
+
     return
 
-global network_data, conjuntos, matriz, byn, G
+global network_data, conjuntos, matriz, byn, G, comunity_data
 network_data = pd.DataFrame()
+comunity_data = pd.DataFrame()
 conjuntos = []
 matriz = np.array([])
 
@@ -179,7 +256,7 @@ if __name__ == "__main__":
     #explorar
 
     parser.add_argument('--sets', default=None, type=str, help='input .txt with hashtags subsets')
-    parser.add_argument('--nt', default=1, type=int, help='set min node threshold for of graph')
+    parser.add_argument('--nt', default=2, type=int, help='set min node threshold for of graph')
     parser.add_argument('--et', default=None, type=int, help='set min edge threshold of graph')
     parser.add_argument('--i', default=1, type=float, help='remove isolate nodes')
     
@@ -187,7 +264,9 @@ if __name__ == "__main__":
     
     createByParameters(args.sets, args.nt,  args.et, args.i)
         
-    network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
+    network_data.to_csv('./_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
+
+    comunity_data.to_csv('./ht_comunities.csv', index=False)
 
 
 
