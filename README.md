@@ -46,7 +46,7 @@ this will scrape tweets using the query and generate a graph of the hashtags use
 
 if you already have the subsets of hashtags you cant explore them. 
 
-run JIDOKA and wirite the file that contains the subsets of hashtags. nt, et, byO and dnt parameters are optional
+run JIDOKA and wirite the file that contains the subsets of hashtags. nt, et, i and dnt parameters are optional
  
     python JIDOKA.py --sets ./proyecto/sets_culiacan.txt  --nt 2 --et 1
     
