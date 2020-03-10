@@ -16,7 +16,6 @@ def replaceUrls(text, r):
 
 def getHashtags(text):
     find = re.findall(r'#\w*',text)
-    
     return [re.sub('http\w*|pic\w*', '', find[i]) for i in range(len(find))]
 
 def removeLastHT(text):
@@ -26,7 +25,6 @@ def removeLastHT(text):
             text = text.replace(hs, ' ')
     text = re.sub(r'\s+',' ',text)
     text = re.sub(r'[\s]*$','',text)
-    
     return text
 
 def removeEmoji(text):
