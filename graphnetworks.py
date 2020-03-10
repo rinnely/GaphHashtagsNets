@@ -144,7 +144,6 @@ def getComunity():
             network_data.loc[ap,'color']='#ffffff'
             network_data.loc[ap,'community']=-1
             
-    
     return
 
 def removeBridges():
@@ -240,13 +239,13 @@ def createByParameters(filename, nodeThreshold=1, edgeThreshold=None, isolates=1
         
     graphNetwork()
 
-    community_data = network_data[['ht','community']]
+    community_data = network_data[['ht','community', 'frq']]
 
     return
 
-global network_data, conjuntos, matriz, byn, G, comunity_data
+global network_data, conjuntos, matriz, byn, G, community_data
 network_data = pd.DataFrame()
-comunity_data = pd.DataFrame()
+community_data = pd.DataFrame()
 conjuntos = []
 matriz = np.array([])
 
@@ -266,7 +265,7 @@ if __name__ == "__main__":
         
     network_data.to_csv('./_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
 
-    comunity_data.to_csv('./ht_comunities.csv', index=False)
+    community_data.to_csv('./_community_N'+str(args.nt)+'E'+str(args.et)+'.csv', index=False)
 
 
 
