@@ -16,7 +16,7 @@ def replaceUrls(text, r):
 
 def getHashtags(text):
     find = re.findall(r'#\w*',text)
-    return [re.sub('http\w*|pic\w*', '', find[i]) for i in range(len(find))]
+    return [re.sub('http\w*|pic\w*', '', find[i]) for i in range(len(find)) if find[i]!='#']
 
 def removeLastHT(text):
     hastags = getHashtags(text)
