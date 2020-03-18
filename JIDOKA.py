@@ -1,7 +1,3 @@
-#!/usr/bin/env python
-# coding: utf-8
-
-
 import os
 import sys
 import re
@@ -10,8 +6,6 @@ import graphnetworks as gn
 import datetime
 import argparse
 import cleandata as cd
-
-global topic
 
 def scrapTweets(query, limit=None, lang='', output='tweets.csv', begin = datetime.date.today()-datetime.timedelta(days=60), end = datetime.date.today()):
     from twitterscraper import query_tweets;
@@ -51,8 +45,8 @@ def makeDirectory(path):
 def readData(filename):
     tweets = pd.read_csv(filename)
     tweets = tweets.dropna()
-    return tweets
-    
+    return tweets    
+
     
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description="JIDOKA")
@@ -67,9 +61,12 @@ if __name__ == "__main__":
     #explorar
 
     parser.add_argument('--sets', default=None, type=str, help='input .txt with hashtags subsets')
-    parser.add_argument('--nt', default=2, type=int, help='set min node threshold for of graph')
-    parser.add_argument('--et', default=None, type=int, help='set min edge threshold of graph')
-    parser.add_argument('--i', default=1, type=float, help='remove isolate nodes')
+    parser.add_argument('--nt', default=1, type=int, help='set min node threshold for of network')
+    parser.add_argument('--et', default=1, type=int, help='set min edge threshold of network')
+    parser.add_argument('--iso', default=False, type=bool, help='remove isolate nodes')
+    parser.add_argument('--comm', default=False, type=bool, help='if True compute communities in network')
+    parser.add_argument('--vis', default=False, type=bool, help='if True show graph of hashtags')
+
     
     args = parser.parse_args()
            
@@ -94,17 +91,17 @@ if __name__ == "__main__":
 
         subsetfile = path+'/'+topic+'_subsets.txt'
                     
-        gn.createByParameters(subsetfile, args.nt,  args.et, args.i)
-
-        gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
-
+        network = gn.HashtagsData(subsetfile, args.nt,  args.et, args.iso)
     
     elif args.sets:
-        gn.createByParameters(args.sets, args.nt,  args.et, args.i)
-
-        gn.network_data.to_csv(path+'/'+topic+'_subgraphs_N'+str(args.nt)+'E'+str(args.et)+'.csv')
+        network = gn.HashtagsData(args.sets, args.nt,  args.et, args.iso)
+                
+    if args.comm:
+        network.getCommunity()
         
-        gn.comunity_data.to_csv('./'+topic+'ht_comunities.csv', index=False)
+    if args.vis:
+        network.showGraph()
 
+    network.data.to_csv(network._path[0]+'network_data_N'+str(args.nt)+'E'+str(args.et)+'.csv')
 
-        
+    
