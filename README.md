@@ -19,11 +19,10 @@ for linux users:
     5. Install networks: pip install networkx
 
     6. Install sknetwork: pip install scikit-network
+    
 
 
-	usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
-                 [--lang LANG] [--sets SETS] [--nt NT] [--et ET] [--iso ISO]
-                 [--comm COMM] [--vis VIS]
+    usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT] [--lang LANG] [--sets SETS] [--nt NT] [--et ET] [--iso ISO] [--comm COMM] [--vis VIS]
 
 JIDOKA
 
