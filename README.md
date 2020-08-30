@@ -22,7 +22,10 @@ for linux users:
     
 
 
-    usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT] [--lang LANG] [--sets SETS] [--nt NT] [--et ET] [--iso ISO] [--comm COMM] [--vis VIS]
+usage: 
+
+	JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT] [--lang LANG] [--sets SETS] [--nt NT] 
+		  [--et ET] [--iso ISO] [--comm COMM] [--vis VIS]
 
 JIDOKA
 
