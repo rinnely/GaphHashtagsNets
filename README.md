@@ -21,13 +21,13 @@ for linux users:
     6. Install sknetwork: pip install scikit-network
 
 
-usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
+	usage: JIDOKA.py [-h] [--topic TOPIC] [--query QUERY] [--limit LIMIT]
                  [--lang LANG] [--sets SETS] [--nt NT] [--et ET] [--iso ISO]
                  [--comm COMM] [--vis VIS]
 
 JIDOKA
 
-optional arguments:
+	optional arguments:
 	  -h, --help     show this help message and exit
 	  --topic TOPIC  topic name for the project.
 	  --query QUERY  query to scrap tweets.
